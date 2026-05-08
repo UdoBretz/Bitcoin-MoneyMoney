@@ -1,5 +1,5 @@
 -- Inofficial Bitcoin Extension for MoneyMoney
--- Fetches Bitcoin quantity for addresses via api.blockcypher.com API
+-- Fetches Bitcoin quantity for addresses via blockchain.info API
 -- Fetches Bitcoin price in EUR via blockchain.info API
 -- Returns cryptoassets as securities
 --
@@ -29,7 +29,7 @@
 
 
 WebBanking{
-  version = 0.5,
+  version = 0.51,
   description = "Include your Bitcoins as cryptoportfolio in MoneyMoney by providing Bitcoin addresses as username (comma separated).",
   services= { "Bitcoin" }
 }
@@ -95,7 +95,7 @@ function requestBitcoinQuantityForBitcoinAddress(bitcoinAddress)
   response = connection:request("GET", bitcoinRequestUrl(bitcoinAddress), {})
 
   json = JSON(response)
-  satoshi = json:dictionary()["balance"]
+  satoshi = json:dictionary()[bitcoinAddress]["final_balance"]
 
   return convertSatoshiToBitcoin(satoshi)
 end
@@ -111,5 +111,5 @@ function priceRequestUrl()
 end
 
 function bitcoinRequestUrl(bitcoinAddress)
-  return "https://api.blockcypher.com/v1/btc/main/addrs/" .. bitcoinAddress
+  return "https://blockchain.info/balance?active=" .. bitcoinAddress
 end
